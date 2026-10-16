@@ -3,10 +3,14 @@ package model;
 public class Instruktur extends Orang {
     private String keahlian;
 
-    public Instruktur(int id, String nama, String noHp, String keahlian) {
-        // Inheritance: data umum diteruskan ke constructor parent Orang.
+    public Instruktur(
+            int id,
+            String nama,
+            String noHp,
+            String keahlian) {
+
         super(id, nama, noHp);
-        this.keahlian = keahlian;
+        setKeahlian(keahlian);
     }
 
     public String getKeahlian() {
@@ -14,12 +18,19 @@ public class Instruktur extends Orang {
     }
 
     public void setKeahlian(String keahlian) {
-        this.keahlian = keahlian;
+        if (keahlian == null
+                || keahlian.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                "Keahlian wajib diisi"
+            );
+        }
+
+        this.keahlian = keahlian.trim();
     }
 
     @Override
     public String getInfo() {
         return "[Instruktur] " + super.getInfo()
-                + " | Keahlian: " + keahlian;
+                + " | Keahlian: " + getKeahlian();
     }
 }
