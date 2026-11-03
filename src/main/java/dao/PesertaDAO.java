@@ -1,13 +1,20 @@
+
 package dao;
 
 import config.Database;
+import model.Peserta;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import model.Peserta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PesertaDAO {
 
+    // CREATE: MENAMBAHKAN DATA PESERTA
     public boolean insert(
             Peserta peserta,
             String jenisKelamin,
@@ -27,37 +34,85 @@ public class PesertaDAO {
             ps.setString(5, peserta.getNoHp());
             ps.setString(6, email);
 
-            return ps.executeUpdate() == 1;
+            return ps.executeUpdate() > 0;
         }
     }
-    public java.util.List<model.Peserta> getAll()
-        throws java.sql.SQLException {
 
-    java.util.List<model.Peserta> daftar =
-            new java.util.ArrayList<>();
+    // READ: MENGAMBIL SEMUA DATA PESERTA
+    public List<Object[]> getAllRows() throws SQLException {
 
-    String sql = "SELECT id, nama, no_hp, nim, prodi "
-            + "FROM peserta ORDER BY id DESC";
+        List<Object[]> daftar = new ArrayList<>();
 
-    try (java.sql.Connection conn =
-                 config.Database.getConnection();
-         java.sql.PreparedStatement ps =
-                 conn.prepareStatement(sql);
-         java.sql.ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT id_peserta, nim, nama, "
+                + "jenis_kelamin, prodi, no_hp, email "
+                + "FROM peserta ORDER BY id_peserta DESC";
 
-        while (rs.next()) {
-            model.Peserta peserta = new model.Peserta(
-                    rs.getInt("id"),
-                    rs.getString("nama"),
-                    rs.getString("no_hp"),
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Object[] data = {
+                    rs.getInt("id_peserta"),
                     rs.getString("nim"),
-                    rs.getString("prodi")
-            );
+                    rs.getString("nama"),
+                    rs.getString("jenis_kelamin"),
+                    rs.getString("prodi"),
+                    rs.getString("no_hp"),
+                    rs.getString("email")
+                };
 
-            daftar.add(peserta);
+                daftar.add(data);
+            }
+        }
+
+        return daftar;
+    }
+
+    // UPDATE: MENGUBAH DATA PESERTA
+    public boolean update(
+            int id,
+            Peserta peserta,
+            String jenisKelamin,
+            String email) throws SQLException {
+
+        String sql = "UPDATE peserta SET "
+                + "nim = ?, "
+                + "nama = ?, "
+                + "jenis_kelamin = ?, "
+                + "prodi = ?, "
+                + "no_hp = ?, "
+                + "email = ? "
+                + "WHERE id_peserta = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, peserta.getNim());
+            ps.setString(2, peserta.getNama());
+            ps.setString(3, jenisKelamin);
+            ps.setString(4, peserta.getProdi());
+            ps.setString(5, peserta.getNoHp());
+            ps.setString(6, email);
+            ps.setInt(7, id);
+
+            return ps.executeUpdate() > 0;
         }
     }
 
-    return daftar;
-}
+    // DELETE: MENGHAPUS DATA PESERTA
+    public boolean delete(int id) throws SQLException {
+
+        String sql = "DELETE FROM peserta "
+                + "WHERE id_peserta = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            return ps.executeUpdate() > 0;
+        }
+    }
 }
