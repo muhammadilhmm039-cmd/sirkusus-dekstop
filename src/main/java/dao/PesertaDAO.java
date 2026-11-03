@@ -38,7 +38,7 @@ public class PesertaDAO {
         }
     }
 
-    // READ: MENGAMBIL SEMUA DATA PESERTA
+    // READ: MENGAMBIL SEMUA DATA UNTUK TABEL
     public List<Object[]> getAllRows() throws SQLException {
 
         List<Object[]> daftar = new ArrayList<>();
@@ -64,6 +64,35 @@ public class PesertaDAO {
                 };
 
                 daftar.add(data);
+            }
+        }
+
+        return daftar;
+    }
+
+    // READ: MENGAMBIL DATA PESERTA SEBAGAI OBJECT
+    public List<Peserta> getAll() throws SQLException {
+
+        List<Peserta> daftar = new ArrayList<>();
+
+        String sql = "SELECT id_peserta, nama, no_hp, nim, prodi "
+                + "FROM peserta ORDER BY id_peserta DESC";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Peserta peserta = new Peserta(
+                        rs.getInt("id_peserta"),
+                        rs.getString("nama"),
+                        rs.getString("no_hp"),
+                        rs.getString("nim"),
+                        rs.getString("prodi")
+                );
+
+                daftar.add(peserta);
             }
         }
 
