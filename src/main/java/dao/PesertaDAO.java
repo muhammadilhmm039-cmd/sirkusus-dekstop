@@ -1,4 +1,3 @@
-
 package dao;
 
 import config.Database;
@@ -38,7 +37,6 @@ public class PesertaDAO {
         }
     }
 
-    // READ: MENGAMBIL SEMUA DATA UNTUK TABEL
     public List<Object[]> getAllRows() throws SQLException {
 
         List<Object[]> daftar = new ArrayList<>();
