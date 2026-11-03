@@ -4,11 +4,14 @@
  * and open the template in the editor.
  */
 package view;
+import config.Database;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
-/**
- *
- * @author USER
- */
+ 
+ 
+ 
 public class FormPendaftaranKursus extends javax.swing.JFrame {
 
     /**
@@ -168,9 +171,8 @@ private void resetForm() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         groupJenis = new javax.swing.ButtonGroup();
+        jProgressBar1 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtNama = new javax.swing.JTextField();
@@ -189,10 +191,14 @@ private void resetForm() {
         btnReset = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         txtKodeAkses = new javax.swing.JPasswordField();
-
-        jLabel4.setText("jLabel4");
-
-        jButton1.setText("jButton1");
+        jLabel8 = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        txtNoHp = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        txtProdi = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        txtNim = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -207,10 +213,10 @@ private void resetForm() {
             }
         });
 
-        jLabel5.setText("Jenis Peserta");
+        jLabel5.setText("jenis kelamin");
 
         groupJenis.add(rbMahasiswa);
-        rbMahasiswa.setText("Mahasiswa");
+        rbMahasiswa.setText("L");
         rbMahasiswa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbMahasiswaActionPerformed(evt);
@@ -218,7 +224,7 @@ private void resetForm() {
         });
 
         groupJenis.add(rbUmum);
-        rbUmum.setText("Umum");
+        rbUmum.setText("P");
 
         jLabel3.setText("Kursus");
 
@@ -267,85 +273,113 @@ private void resetForm() {
 
         jLabel7.setText("Kode Akses");
 
+        jLabel8.setText("Email");
+
+        jLabel9.setText("No. HP");
+
+        jLabel10.setText("Program Studi");
+
+        jLabel11.setText("NIM");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnProses)
+                .addGap(76, 76, 76)
+                .addComponent(btnReset)
+                .addGap(111, 111, 111))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(92, 92, 92))
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel3)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
+                        .addGap(10, 10, 10)
+                        .addComponent(rbMahasiswa)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(rbUmum)
+                        .addGap(119, 119, 119))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(rbMahasiswa)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(rbUmum)
-                                .addGap(50, 50, 50))
+                                .addComponent(cbModul)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbSertifikat)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbRekaman))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(txtKodeAkses)
                                 .addComponent(cmbKursus, javax.swing.GroupLayout.Alignment.LEADING, 0, 259, Short.MAX_VALUE)
-                                .addComponent(txtNama, javax.swing.GroupLayout.Alignment.LEADING))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(cbModul)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbSertifikat)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbRekaman)))
-                .addContainerGap(26, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnProses)
-                        .addGap(76, 76, 76)
-                        .addComponent(btnReset)
-                        .addGap(111, 111, 111))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(104, 104, 104))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(92, 92, 92))
+                                .addComponent(txtNama, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(txtNoHp, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtProdi, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(38, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(32, 32, 32)
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rbUmum)
+                    .addComponent(rbMahasiswa)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(txtKodeAkses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbMahasiswa)
-                    .addComponent(jLabel5)
-                    .addComponent(rbUmum))
+                    .addComponent(jLabel10)
+                    .addComponent(txtProdi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(cmbKursus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel9)
+                    .addComponent(txtNoHp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
+                    .addComponent(jLabel8)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtKodeAkses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbKursus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbModul)
+                    .addComponent(jLabel6)
                     .addComponent(cbSertifikat)
                     .addComponent(cbRekaman))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnReset)
@@ -411,6 +445,54 @@ String ringkasan =
 
 txtRingkasan.setText(ringkasan);
 
+String nim = txtNim.getText().trim();
+String namaPeserta = txtNama.getText().trim();
+String jenisKelamin = "";
+
+if (rbMahasiswa.isSelected()) {
+    jenisKelamin = "L";
+} else if (rbUmum.isSelected()) {
+    jenisKelamin = "P";
+}
+
+String prodi = txtProdi.getText().trim();
+String noHp = txtNoHp.getText().trim();
+String email = txtEmail.getText().trim();
+
+String sql = "INSERT INTO peserta "
+        + "(nim, nama, jenis_kelamin, prodi, no_hp, email) "
+        + "VALUES (?, ?, ?, ?, ?, ?)";
+
+try (Connection conn = Database.getConnection();
+     PreparedStatement ps = conn.prepareStatement(sql)) {
+
+    ps.setString(1, nim);
+    ps.setString(2, namaPeserta);
+    ps.setString(3, jenisKelamin);
+    ps.setString(4, prodi);
+    ps.setString(5, noHp);
+    ps.setString(6, email);
+
+    ps.executeUpdate();
+
+    JOptionPane.showMessageDialog(
+            this,
+            "Data peserta berhasil disimpan ke database!",
+            "Berhasil",
+            JOptionPane.INFORMATION_MESSAGE
+    );
+
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(
+            this,
+            "Gagal menyimpan data peserta: " + ex.getMessage(),
+            "Kesalahan Database",
+            JOptionPane.ERROR_MESSAGE
+    );
+    ex.printStackTrace();
+    return;
+}
+
 JOptionPane.showMessageDialog(
         this,
         "Pendaftaran berhasil diproses.",
@@ -421,6 +503,33 @@ JOptionPane.showMessageDialog(
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
   resetForm();
+    txtNim.setText("");
+    txtNama.setText("");
+    txtProdi.setText("");
+    txtNoHp.setText("");
+    txtEmail.setText("");
+    txtKodeAkses.setText("");
+
+    // Kosongkan pilihan jenis kelamin
+    rbMahasiswa.setSelected(false);
+    rbUmum.setSelected(false);
+
+    // Kembalikan pilihan kursus
+    if (cmbKursus.getItemCount() > 0) {
+        cmbKursus.setSelectedIndex(0);
+    }
+
+    // Kosongkan pilihan fasilitas
+    cbModul.setSelected(false);
+    cbSertifikat.setSelected(false);
+    cbRekaman.setSelected(false);
+
+    // Hapus ringkasan
+    txtRingkasan.setText("");
+
+    // Fokus kembali ke kolom NIM
+    txtNim.requestFocusInWindow();
+
     }//GEN-LAST:event_btnResetActionPerformed
 
     /**
@@ -466,19 +575,26 @@ JOptionPane.showMessageDialog(
     private javax.swing.JCheckBox cbSertifikat;
     private javax.swing.JComboBox<String> cmbKursus;
     private javax.swing.ButtonGroup groupJenis;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton rbMahasiswa;
     private javax.swing.JRadioButton rbUmum;
+    private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtKodeAkses;
     private javax.swing.JTextField txtNama;
+    private javax.swing.JTextField txtNim;
+    private javax.swing.JTextField txtNoHp;
+    private javax.swing.JTextField txtProdi;
     private javax.swing.JTextArea txtRingkasan;
     // End of variables declaration//GEN-END:variables
 }
