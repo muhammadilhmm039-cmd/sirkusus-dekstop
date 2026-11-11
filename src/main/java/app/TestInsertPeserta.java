@@ -1,3 +1,4 @@
+
 package app;
 
 import dao.PesertaDAO;
@@ -10,24 +11,25 @@ public class TestInsertPeserta {
 
         try {
             Peserta peserta = new Peserta(
-                    0,
-                    "Nadia Putri",
-                    "081200000099",
                     "252099",
-                    "Informatika"
+                    "Nadia Putri",
+                    "P",
+                    "Informatika",
+                    "081200000099",
+                    "nadia@example.test"
             );
 
             PesertaDAO dao = new PesertaDAO();
 
-            boolean berhasil = dao.insert(
-                    peserta,
-                    "P",
-                    "nadia@example.test"
-            );
+            boolean berhasil = dao.insert(peserta);
 
             if (berhasil) {
                 System.out.println(
                         "DATA PESERTA BERHASIL DISIMPAN!"
+                );
+            } else {
+                System.out.println(
+                        "DATA PESERTA GAGAL DISIMPAN!"
                 );
             }
 

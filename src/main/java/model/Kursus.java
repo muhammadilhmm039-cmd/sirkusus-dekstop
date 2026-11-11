@@ -1,6 +1,9 @@
+
 package model;
 
 public class Kursus {
+
+    private int idKursus;
     private String kode;
     private String nama;
     private String level;
@@ -9,6 +12,7 @@ public class Kursus {
     public Kursus() {
     }
 
+    // Constructor tanpa ID untuk input data baru
     public Kursus(
             String kode,
             String nama,
@@ -19,6 +23,34 @@ public class Kursus {
         setNama(nama);
         setLevel(level);
         setBiaya(biaya);
+    }
+
+    // Constructor lengkap untuk mengambil data database
+    public Kursus(
+            int idKursus,
+            String kode,
+            String nama,
+            String level,
+            double biaya) {
+
+        setIdKursus(idKursus);
+        setKode(kode);
+        setNama(nama);
+        setLevel(level);
+        setBiaya(biaya);
+    }
+
+    public int getIdKursus() {
+        return idKursus;
+    }
+
+    public void setIdKursus(int idKursus) {
+        if (idKursus < 0) {
+            throw new IllegalArgumentException(
+                "ID kursus tidak boleh negatif"
+            );
+        }
+        this.idKursus = idKursus;
     }
 
     public String getKode() {

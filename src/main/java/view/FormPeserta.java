@@ -1,3 +1,4 @@
+
 package view;
 
 import dao.PesertaDAO;
@@ -10,7 +11,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -60,7 +60,9 @@ public class FormPeserta extends JFrame {
     private void buatTampilan() {
 
         JPanel utama = new JPanel(new BorderLayout(10, 10));
-        utama.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        utama.setBorder(
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        );
         utama.setBackground(new Color(235, 245, 250));
 
         // HEADER
@@ -94,7 +96,9 @@ public class FormPeserta extends JFrame {
 
         JPanel panel = new JPanel(new GridBagLayout());
 
-        panel.setBorder(BorderFactory.createTitledBorder("Form Peserta"));
+        panel.setBorder(
+                BorderFactory.createTitledBorder("Form Peserta")
+        );
         panel.setBackground(Color.WHITE);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -121,7 +125,6 @@ public class FormPeserta extends JFrame {
 
         // TOMBOL
         JPanel panelTombol = new JPanel();
-
         panelTombol.setBackground(Color.WHITE);
 
         btnSimpan = new JButton("Simpan");
@@ -194,12 +197,13 @@ public class FormPeserta extends JFrame {
 
         JPanel panel = new JPanel(new BorderLayout(10, 10));
 
-        panel.setBorder(BorderFactory.createTitledBorder("Data Peserta"));
+        panel.setBorder(
+                BorderFactory.createTitledBorder("Data Peserta")
+        );
         panel.setBackground(Color.WHITE);
 
         // PENCARIAN
         JPanel panelCari = new JPanel();
-
         panelCari.setBackground(Color.WHITE);
 
         txtCari = new JTextField(25);
@@ -212,7 +216,6 @@ public class FormPeserta extends JFrame {
         panel.add(panelCari, BorderLayout.NORTH);
 
         btnCari.addActionListener(e -> cariData());
-
         txtCari.addActionListener(e -> cariData());
 
         // TABEL
@@ -296,10 +299,19 @@ public class FormPeserta extends JFrame {
 
         try {
 
-            List<Object[]> daftar = dao.getAllRows();
+            List<Peserta> daftar = dao.findAll();
 
-            for (Object[] data : daftar) {
-                modelTabel.addRow(data);
+            for (Peserta peserta : daftar) {
+
+                modelTabel.addRow(new Object[]{
+                    peserta.getId(),
+                    peserta.getNim(),
+                    peserta.getNama(),
+                    peserta.getJenisKelamin(),
+                    peserta.getProdi(),
+                    peserta.getNoHp(),
+                    peserta.getEmail()
+                });
             }
 
         } catch (SQLException e) {
@@ -322,10 +334,7 @@ public class FormPeserta extends JFrame {
 
             Peserta peserta = ambilDataForm();
 
-            String jk = cmbJenisKelamin.getSelectedItem().toString();
-            String email = txtEmail.getText().trim();
-
-            boolean berhasil = dao.insert(peserta, jk, email);
+            boolean berhasil = dao.insert(peserta);
 
             if (berhasil) {
 
@@ -336,6 +345,12 @@ public class FormPeserta extends JFrame {
 
                 tampilData();
                 resetForm();
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Data peserta gagal disimpan!"
+                );
             }
 
         } catch (SQLException e) {
@@ -343,6 +358,13 @@ public class FormPeserta extends JFrame {
             JOptionPane.showMessageDialog(
                     this,
                     "Gagal menyimpan data: " + e.getMessage()
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Data tidak valid: " + e.getMessage()
             );
         }
     }
@@ -367,16 +389,9 @@ public class FormPeserta extends JFrame {
             }
 
             Peserta peserta = ambilDataForm();
+            peserta.setId(idTerpilih);
 
-            String jk = cmbJenisKelamin.getSelectedItem().toString();
-            String email = txtEmail.getText().trim();
-
-            boolean berhasil = dao.update(
-                    idTerpilih,
-                    peserta,
-                    jk,
-                    email
-            );
+            boolean berhasil = dao.update(peserta);
 
             if (berhasil) {
 
@@ -387,6 +402,12 @@ public class FormPeserta extends JFrame {
 
                 tampilData();
                 resetForm();
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Data peserta gagal diubah!"
+                );
             }
 
         } catch (SQLException e) {
@@ -394,6 +415,13 @@ public class FormPeserta extends JFrame {
             JOptionPane.showMessageDialog(
                     this,
                     "Gagal mengubah data: " + e.getMessage()
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Data tidak valid: " + e.getMessage()
             );
         }
     }
@@ -433,6 +461,12 @@ public class FormPeserta extends JFrame {
 
                     tampilData();
                     resetForm();
+                } else {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Data gagal dihapus!"
+                    );
                 }
 
             } catch (SQLException e) {
@@ -448,25 +482,25 @@ public class FormPeserta extends JFrame {
     // SEARCH: CARI DATA
     private void cariData() {
 
-        String keyword = txtCari.getText()
-                .trim().toLowerCase();
+        String keyword = txtCari.getText().trim();
 
         modelTabel.setRowCount(0);
 
         try {
 
-            List<Object[]> daftar = dao.getAllRows();
+            List<Peserta> daftar = dao.search(keyword);
 
-            for (Object[] data : daftar) {
+            for (Peserta peserta : daftar) {
 
-                String nim = String.valueOf(data[1]).toLowerCase();
-                String nama = String.valueOf(data[2]).toLowerCase();
-
-                if (nim.contains(keyword)
-                        || nama.contains(keyword)) {
-
-                    modelTabel.addRow(data);
-                }
+                modelTabel.addRow(new Object[]{
+                    peserta.getId(),
+                    peserta.getNim(),
+                    peserta.getNama(),
+                    peserta.getJenisKelamin(),
+                    peserta.getProdi(),
+                    peserta.getNoHp(),
+                    peserta.getEmail()
+                });
             }
 
         } catch (SQLException e) {
@@ -521,11 +555,12 @@ public class FormPeserta extends JFrame {
     private Peserta ambilDataForm() {
 
         return new Peserta(
-                0,
-                txtNama.getText().trim(),
-                txtNoHp.getText().trim(),
                 txtNim.getText().trim(),
-                txtProdi.getText().trim()
+                txtNama.getText().trim(),
+                cmbJenisKelamin.getSelectedItem().toString(),
+                txtProdi.getText().trim(),
+                txtNoHp.getText().trim(),
+                txtEmail.getText().trim()
         );
     }
 
