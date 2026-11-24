@@ -1,6 +1,8 @@
 package report;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import net.sf.jasperreports.engine.JasperCompileManager;
 
 public class ReportCompiler {
@@ -15,55 +17,93 @@ public class ReportCompiler {
 
     };
 
-    public static void main(String[] args)
-            throws Exception {
+    public static void main(String[] args) {
 
-        File dir = new File(
-            "src/main/resources/report"
+        String versi = JasperCompileManager.class
+                .getPackage().getImplementationVersion();
+
+        System.out.println(
+            "JasperReports versi: "
+            + (versi == null ? "(tidak terdeteksi)" : versi)
         );
+
+        File dir = new File("src/main/resources/report");
 
         if (!dir.isDirectory()) {
 
-            throw new IllegalStateException(
+            System.err.println(
                 "Folder report tidak ditemukan: "
                 + dir.getAbsolutePath()
             );
+
+            System.err.println(
+                "Jalankan dari root project "
+                + "(folder tempat pom.xml berada)."
+            );
+
+            return;
         }
+
+        // Salinan di target/classes agar tidak wajib Clean and Build
+        File targetDir = new File("target/classes/report");
+
+        int berhasil = 0;
+        int gagal = 0;
 
         for (String name : REPORTS) {
 
-            File src = new File(
-                dir,
-                name + ".jrxml"
-            );
-
-            File dst = new File(
-                dir,
-                name + ".jasper"
-            );
+            File src = new File(dir, name + ".jrxml");
+            File dst = new File(dir, name + ".jasper");
 
             if (!src.isFile()) {
 
-                System.out.println(
-                    "File tidak ditemukan: "
-                    + src.getName()
+                System.err.println(
+                    "File tidak ditemukan: " + src.getName()
                 );
 
+                gagal++;
                 continue;
             }
 
-            JasperCompileManager.compileReportToFile(
-                src.getAbsolutePath(),
-                dst.getAbsolutePath()
-            );
+            try {
 
-            System.out.println(
-                "OK: " + dst.getPath()
-            );
+                JasperCompileManager.compileReportToFile(
+                    src.getAbsolutePath(),
+                    dst.getAbsolutePath()
+                );
+
+                if (targetDir.isDirectory()) {
+
+                    Files.copy(
+                        src.toPath(),
+                        new File(targetDir, src.getName()).toPath(),
+                        StandardCopyOption.REPLACE_EXISTING
+                    );
+
+                    Files.copy(
+                        dst.toPath(),
+                        new File(targetDir, dst.getName()).toPath(),
+                        StandardCopyOption.REPLACE_EXISTING
+                    );
+                }
+
+                System.out.println("OK    : " + dst.getPath());
+                berhasil++;
+
+            } catch (Exception ex) {
+
+                System.err.println(
+                    "GAGAL : " + src.getName()
+                );
+
+                ex.printStackTrace();
+                gagal++;
+            }
         }
 
         System.out.println(
-            "Proses kompilasi report selesai."
+            "Selesai. Berhasil: " + berhasil
+            + ", Gagal: " + gagal
         );
     }
 }

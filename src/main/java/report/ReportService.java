@@ -3,6 +3,7 @@ package report;
 import config.Database;
 import java.awt.Component;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.Date;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -20,8 +22,22 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public final class ReportService {
 
+    static {
+        // Hindari error "Font ... is not available to the JVM"
+        try {
+            DefaultJasperReportsContext.getInstance().setProperty(
+                "net.sf.jasperreports.awt.ignore.missing.font",
+                "true"
+            );
+        } catch (Exception ignored) {
+            // abaikan, tidak fatal
+        }
+    }
+
     private ReportService() {
     }
+
+    // ================= LAPORAN PESERTA =================
 
     public static void showPeserta(Component parent) {
 
@@ -31,6 +47,8 @@ public final class ReportService {
             new HashMap<String, Object>()
         );
     }
+
+    // ================= LAPORAN PENDAFTARAN =================
 
     public static void showPendaftaranSemua(
             Component parent) {
@@ -57,6 +75,8 @@ public final class ReportService {
         );
     }
 
+    // ================= LAPORAN PEMBAYARAN =================
+
     public static void showPembayaranSemua(
             Component parent) {
 
@@ -82,6 +102,8 @@ public final class ReportService {
             p
         );
     }
+
+    // ================= PROSES UTAMA =================
 
     private static void show(
             Component parent,
@@ -110,6 +132,7 @@ public final class ReportService {
                 return;
             }
 
+            // false = menutup viewer TIDAK menutup aplikasi
             JasperViewer.viewReport(print, false);
 
         } catch (Exception ex) {
@@ -120,50 +143,73 @@ public final class ReportService {
                 parent,
                 "Gagal membuka laporan "
                 + baseName + ":\n"
-                + ex.getMessage(),
+                + pesanError(ex),
                 "JasperReports",
                 JOptionPane.ERROR_MESSAGE
             );
         }
     }
 
+    // ================= LOAD REPORT =================
+    // 1) coba baca .jasper
+    // 2) jika gagal (mis. beda versi), compile dari .jrxml
+
     private static JasperReport loadReport(
             String baseName) throws Exception {
 
-        String compiled =
+        String compiledPath =
                 "/report/" + baseName + ".jasper";
 
-        try (InputStream in =
-                ReportService.class.getResourceAsStream(
-                    compiled
-                )) {
+        String sourcePath =
+                "/report/" + baseName + ".jrxml";
 
-            if (in != null) {
+        Exception errorJasper = null;
 
-                return (JasperReport)
-                        JRLoader.loadObject(in);
+        URL jasperUrl =
+                ReportService.class.getResource(compiledPath);
+
+        if (jasperUrl != null) {
+
+            try (InputStream in = jasperUrl.openStream()) {
+
+                return (JasperReport) JRLoader.loadObject(in);
+
+            } catch (Exception ex) {
+
+                errorJasper = ex;
+
+                System.err.println(
+                    "[ReportService] " + baseName
+                    + ".jasper gagal dibaca ("
+                    + pesanError(ex)
+                    + "). Mencoba compile dari .jrxml..."
+                );
             }
         }
 
-        String source =
-                "/report/" + baseName + ".jrxml";
+        URL sourceUrl =
+                ReportService.class.getResource(sourcePath);
 
-        try (InputStream in =
-                ReportService.class.getResourceAsStream(
-                    source
-                )) {
+        if (sourceUrl == null) {
 
-            if (in == null) {
+            String info = "Resource report tidak ditemukan: "
+                    + compiledPath + " dan " + sourcePath;
 
-                throw new IllegalStateException(
-                    "Resource report tidak ditemukan: "
-                    + source
-                );
+            if (errorJasper != null) {
+                info += "\nError .jasper: "
+                        + pesanError(errorJasper);
             }
+
+            throw new IllegalStateException(info);
+        }
+
+        try (InputStream in = sourceUrl.openStream()) {
 
             return JasperCompileManager.compileReport(in);
         }
     }
+
+    // ================= EXPORT PDF =================
 
     public static void exportPdf(
             Component parent,
@@ -199,10 +245,25 @@ public final class ReportService {
 
             JOptionPane.showMessageDialog(
                 parent,
-                "Export PDF gagal: " + ex.getMessage(),
+                "Export PDF gagal: " + pesanError(ex),
                 "JasperReports",
                 JOptionPane.ERROR_MESSAGE
             );
         }
+    }
+
+    // ================= BANTUAN =================
+    // Ambil penyebab error paling dalam agar jelas
+
+    private static String pesanError(Throwable ex) {
+
+        Throwable t = ex;
+
+        while (t.getCause() != null && t.getCause() != t) {
+            t = t.getCause();
+        }
+
+        return t.getClass().getSimpleName()
+                + ": " + t.getMessage();
     }
 }

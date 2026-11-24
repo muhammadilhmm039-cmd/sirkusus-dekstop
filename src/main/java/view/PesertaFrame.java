@@ -1,8 +1,8 @@
-
 package view;
 
 import dao.PesertaDAO;
 import model.Peserta;
+import report.ReportService;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -1096,26 +1096,8 @@ public class PesertaFrame extends JFrame {
 
     private void printData() {
 
-        try {
-
-            boolean berhasil = tblPeserta.print();
-
-            if (berhasil) {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Data peserta berhasil dicetak.",
-                        "Informasi",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-            }
-
-        } catch (java.awt.print.PrinterException ex) {
-
-            showError(
-                    "Gagal mencetak: " + ex.getMessage()
-            );
-        }
+        // Membuka laporan Jasper (laporan_peserta) di JasperViewer
+        ReportService.showPeserta(this);
     }
 
     // ================= PESAN ERROR =================

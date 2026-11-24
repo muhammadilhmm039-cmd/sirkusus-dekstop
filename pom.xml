@@ -42,12 +42,23 @@
             <version>8.0.33</version>
         </dependency>
 
-        <!-- JasperReports -->
+        <!-- JasperReports (harus sama dengan Jaspersoft Studio 6.21.5) -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.20.6</version>
+            <version>6.21.5</version>
         </dependency>
+
+        <!--
+        Aktifkan HANYA jika muncul error:
+        "Font 'DejaVu Sans' is not available to the JVM"
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-fonts</artifactId>
+            <version>6.21.5</version>
+        </dependency>
+        -->
 
     </dependencies>
 
