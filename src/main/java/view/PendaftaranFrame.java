@@ -286,20 +286,7 @@ public class PendaftaranFrame extends JFrame {
                 e -> ReportService.showPendaftaranSemua(this)
         );
 
-        terpilih.addActionListener(e -> {
-
-            if (selected < 0) {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Pilih baris pendaftaran."
-                );
-
-            } else {
-
-                ReportService.showPendaftaranById(this, selected);
-            }
-        });
+        terpilih.addActionListener(e -> cetakTerpilih());
 
         cari.addActionListener(
                 e -> load(search.getText())
@@ -672,6 +659,7 @@ public class PendaftaranFrame extends JFrame {
         int r = table.getSelectedRow();
 
         if (r < 0) {
+            selected = -1;
             return;
         }
 
@@ -713,6 +701,31 @@ public class PendaftaranFrame extends JFrame {
                     ex
             );
         }
+    }
+
+    // ================= CETAK PENDAFTARAN TERPILIH =================
+
+    private void cetakTerpilih() {
+
+        int row = table.getSelectedRow();
+
+        if (row == -1) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Pilih satu data pendaftaran terlebih dahulu."
+            );
+
+            return;
+        }
+
+        int idPendaftaran = Integer.parseInt(
+                table.getValueAt(row, 0).toString()
+        );
+
+        System.out.println("ID terpilih: " + idPendaftaran);
+
+        ReportService.showPendaftaranById(this, idPendaftaran);
     }
 
     // ================= RESET FORM =================

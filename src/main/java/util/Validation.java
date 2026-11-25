@@ -33,10 +33,12 @@ public final class Validation {
     }
 
     public static Date date(String value, String label) {
+        String v = required(value, label);
         try {
-            return Date.valueOf(required(value, label));
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException(label + " harus berformat yyyy-MM-dd");
+            return Date.valueOf(java.time.LocalDate.parse(v));
+        } catch (java.time.format.DateTimeParseException ex) {
+            throw new IllegalArgumentException(
+                label + " harus berformat yyyy-MM-dd dan tanggalnya valid");
         }
     }
 }

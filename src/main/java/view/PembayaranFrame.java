@@ -1,4 +1,3 @@
-
 package view;
 
 import dao.PembayaranDAO;
@@ -301,6 +300,10 @@ public class PembayaranFrame extends JFrame {
         );
 
         periode.addActionListener(e -> period());
+
+        // Enter di kolom tanggal = cetak periode (bukan SIMPAN)
+        awal.addActionListener(e -> period());
+        akhir.addActionListener(e -> period());
 
         cari.addActionListener(e -> load(search.getText()));
         search.addActionListener(e -> load(search.getText()));
@@ -657,6 +660,7 @@ public class PembayaranFrame extends JFrame {
         int r = table.getSelectedRow();
 
         if (r < 0) {
+            selected = -1;
             return;
         }
 
